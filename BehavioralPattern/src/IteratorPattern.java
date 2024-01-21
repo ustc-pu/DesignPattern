@@ -3,7 +3,7 @@ import java.util.List;
 
 public class IteratorPattern {
     public static void main(String[] args) {
-        Aggregator aggregator = new AggregatorImpl<String>();
+        Aggregator<String> aggregator = new AggregatorImpl<>();
         aggregator.add("Phoebe Buffay");
         aggregator.add("Monica Geller");
         aggregator.add("Rachel Green");
@@ -11,33 +11,33 @@ public class IteratorPattern {
         aggregator.add("Chandler Bing");
         aggregator.add("Ross Geller");
 
-        for(Iterator iterator = aggregator.createIterator(); iterator.hasNext();) {
+        for(Iterator<String> iterator = aggregator.createIterator(); iterator.hasNext();) {
             System.out.println(iterator.next());
         }
 
-        Aggregator intAggregator = new AggregatorImpl<Integer>();
+        Aggregator<Integer> intAggregator = new AggregatorImpl<>();
         intAggregator.add(15);
         intAggregator.add(18);
         intAggregator.add(21);
 
-        for(Iterator iterator = intAggregator.createIterator(); iterator.hasNext();) {
+        for(Iterator<Integer> iterator = intAggregator.createIterator(); iterator.hasNext();) {
             System.out.println(iterator.next());
         }
     }
 }
 
 
-interface Iterator {
+interface Iterator<T> {
     boolean hasNext();
-    Object next();
+    T next();
 }
 
 interface Aggregator<T> {
-    Iterator createIterator();
+    Iterator<T> createIterator();
     void add(T element);
 }
 
-class IteratorImpl<T> implements Iterator{
+class IteratorImpl<T> implements Iterator<T>{
     private List<T> elements;
     private int pos = 0;
 
@@ -51,9 +51,9 @@ class IteratorImpl<T> implements Iterator{
     }
 
     @Override
-    public Object next() {
+    public T next() {
         if(hasNext()) {
-            Object element = elements.get(pos);
+            T element = elements.get(pos);
             pos++;
             return element;
         }
@@ -70,7 +70,7 @@ class AggregatorImpl<T> implements Aggregator<T>{
     }
 
     @Override
-    public Iterator createIterator() {
-        return new IteratorImpl(elements);
+    public Iterator<T> createIterator() {
+        return new IteratorImpl<>(elements);
     }
 }
